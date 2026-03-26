@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Sarkar — BTech Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080a0f;
+    --surface: #0d1017;
+    --card: #111520;
+    --border: #1e2535;
+    --accent: #00e5ff;
+    --accent2: #ff3d6e;
+    --accent3: #a855f7;
+    --text: #e8eaf2;
+    --muted: #5a6580;
+    --glow: rgba(0, 229, 255, 0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid rgba(0,229,255,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s, height 0.3s;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(8,10,15,0.95), transparent);
+    backdrop-filter: blur(10px);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--text); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    font-weight: 500;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0 4rem;
+    overflow: hidden;
+  }
+
+  /* Grid background */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(0,229,255,0.07) 0%, transparent 65%);
+    top: -100px; right: -200px;
+    pointer-events: none;
+  }
+  .hero-glow2 {
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(168,85,247,0.06) 0%, transparent 65%);
+    bottom: -100px; left: -100px;
+    pointer-events: none;
+  }
+
+  .hero-content { position: relative; z-index: 1; max-width: 900px; }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0,229,255,0.06);
+    border: 1px solid rgba(0,229,255,0.2);
+    border-radius: 2px;
+    padding: 0.4rem 1rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    font-family: 'JetBrains Mono', monospace;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  h1.hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 12vw, 10rem);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+  h1.hero-name .line1 { display: block; color: var(--text); }
+  h1.hero-name .line2 {
+    display: block;
+    -webkit-text-stroke: 1px rgba(0,229,255,0.5);
+    color: transparent;
+  }
+
+  .hero-desc {
+    margin-top: 2rem;
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.8;
+    animation: fadeUp 0.8s 0.2s ease both;
+    font-weight: 300;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 2rem;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .tag-chip {
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--border);
+    font-size: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    border-radius: 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .tag-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 3rem;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+  .btn-primary {
+    padding: 0.85rem 2rem;
+    background: var(--accent);
+    color: #000;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,229,255,0.3);
+  }
+  .btn-ghost {
+    padding: 0.85rem 2rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: var(--muted);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    animation: fadeUp 1s 0.6s ease both;
+  }
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--muted);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    left: -100%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--accent);
+    animation: scanline 2s ease infinite;
+  }
+  @keyframes scanline { 0% { left: -100%; } 100% { left: 100%; } }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION COMMON */
+  section {
+    padding: 7rem 4rem;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    letter-spacing: 0.03em;
+    color: var(--text);
+    line-height: 1;
+  }
+  .section-divider {
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin: 1.5rem 0 3rem;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    margin-top: 3rem;
+  }
+  .about-text p {
+    color: var(--muted);
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+    font-size: 1.05rem;
+  }
+  .about-text p strong { color: var(--text); font-weight: 500; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .stat-box {
+    background: var(--card);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .stat-box:hover::before { opacity: 1; }
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: 0.05em;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+
+  /* SKILLS */
+  .skills-section { background: var(--surface); }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .skill-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .skill-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+  }
+  .skill-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.03), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .skill-card:hover::after { opacity: 1; }
+  .skill-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .skill-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .skill-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1rem;
+  }
+  .skill-tag {
+    padding: 0.2rem 0.6rem;
+    background: rgba(0,229,255,0.06);
+    border: 1px solid rgba(0,229,255,0.15);
+    font-size: 0.68rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    border-radius: 2px;
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: pointer;
+  }
+  .project-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-5px);
+  }
+  .project-card.featured {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .project-visual {
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .project-card.featured .project-visual { height: 100%; min-height: 280px; }
+  .pv-gaming { background: linear-gradient(135deg, #0d0620, #1a0535, #0a1535); }
+  .pv-graphics { background: linear-gradient(135deg, #001a1a, #002a2a, #00151f); }
+  .pv-uiux { background: linear-gradient(135deg, #1a0010, #2a0020, #0a0020); }
+  .pv-motion { background: linear-gradient(135deg, #0a0a00, #1a1500, #0a1500); }
+  .pv-brand { background: linear-gradient(135deg, #00101a, #001525, #001020); }
+
+  .pv-icon {
+    font-size: 4rem;
+    opacity: 0.4;
+    position: absolute;
+    filter: blur(1px);
+    transition: transform 0.4s, opacity 0.4s;
+  }
+  .project-card:hover .pv-icon { transform: scale(1.2); opacity: 0.6; }
+
+  .pv-label {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-radius: 2px;
+  }
+  .pv-label.gaming { background: rgba(168,85,247,0.2); color: #a855f7; border: 1px solid rgba(168,85,247,0.3); }
+  .pv-label.graphics { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.2); }
+  .pv-label.uiux { background: rgba(255,61,110,0.15); color: var(--accent2); border: 1px solid rgba(255,61,110,0.25); }
+
+  .project-info { padding: 1.8rem; }
+  .project-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    margin-bottom: 0.6rem;
+  }
+  .project-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
+  }
+  .project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .tech-tag {
+    padding: 0.2rem 0.6rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 0.68rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+    border-radius: 2px;
+  }
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1.2rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: gap 0.2s;
+  }
+  .project-link:hover { gap: 0.8rem; }
+
+  /* CONTACT */
+  .contact-section { background: var(--surface); }
+  .contact-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .contact-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 1.2rem 2.5rem;
+    border-radius: 2px;
+    margin: 2.5rem auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    color: var(--accent);
+    text-decoration: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .contact-email:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px var(--glow);
+  }
+  .contact-note {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .socials {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+  .social-link {
+    width: 44px; height: 44px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 1rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  }
+  .social-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer p {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* SCANLINE effect top */
+  .scanline-top {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    z-index: 200;
+    animation: scanTop 3s ease-in-out infinite;
+    opacity: 0.5;
+  }
+  @keyframes scanTop {
+    0% { transform: scaleX(0); transform-origin: left; }
+    50% { transform: scaleX(1); transform-origin: left; }
+    51% { transform: scaleX(1); transform-origin: right; }
+    100% { transform: scaleX(0); transform-origin: right; }
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.5rem 2rem; }
+    .nav-links { display: none; }
+    section { padding: 5rem 2rem; }
+    .hero { padding: 0 2rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .project-card.featured { grid-column: span 1; display: block; }
+    footer { padding: 1.5rem 2rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+    .scroll-indicator { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .skills-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scanline-top"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">DS<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Available for Freelance &amp; Collabs</div>
+    <h1 class="hero-name">
+      <span class="line1">Deep</span>
+      <span class="line2">Sarkar</span>
+    </h1>
+    <p class="hero-desc">
+      BTech Engineer blending technical precision with creative vision — crafting immersive <strong>game experiences</strong>, striking <strong>graphic design</strong>, and intuitive <strong>UI/UX</strong> interfaces.
+    </p>
+    <div class="hero-tags">
+      <span class="tag-chip">Game Design</span>
+      <span class="tag-chip">Graphics</span>
+      <span class="tag-chip">UI/UX</span>
+      <span class="tag-chip">Motion Design</span>
+      <span class="tag-chip">Branding</span>
+      <span class="tag-chip">BTech Engineer</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#projects" class="btn-primary">View Work</a>
+      <a href="#contact" class="btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    Scroll to explore
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">// 01 — About</div>
+  <div class="section-title">Who I Am</div>
+  <div class="section-divider"></div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>
+        I'm <strong>Deep Sarkar</strong>, a BTech Engineer with a passion that bridges the gap between structured engineering thinking and creative artistry. I turn ideas into digital experiences that people feel.
+      </p>
+      <p>
+        My work spans <strong>game design</strong> — building worlds, mechanics, and atmospheres — to <strong>graphic design</strong> with bold visual language, and <strong>UI/UX</strong> design focused on creating interfaces that are both beautiful and deeply functional.
+      </p>
+      <p>
+        I believe the best digital experiences are engineered with precision and designed with soul. Every pixel has a purpose. Every interaction tells a story.
+      </p>
+    </div>
+    <div class="stats-grid reveal">
+      <div class="stat-box">
+        <div class="stat-number">10+</div>
+        <div class="stat-label">Projects Done</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Core Disciplines</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">Ideas in Queue</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">1</div>
+        <div class="stat-label">Relentless Vision</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="skills-section">
+  <div class="section-label">// 02 — Skills</div>
+  <div class="section-title">What I Do</div>
+  <div class="section-divider"></div>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <span class="skill-icon">🎮</span>
+      <div class="skill-title">Game Design</div>
+      <p class="skill-desc">Building immersive game worlds, designing mechanics, and crafting player journeys that keep people hooked.</p>
+      <div class="skill-tags">
+        <span class="skill-tag">Unity</span>
+        <span class="skill-tag">Unreal</span>
+        <span class="skill-tag">Level Design</span>
+        <span class="skill-tag">Game Mechanics</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">🎨</span>
+      <div class="skill-title">Graphic Design</div>
+      <p class="skill-desc">Visual communication through bold typography, color theory, and compositional mastery — from logos to full brand identities.</p>
+      <div class="skill-tags">
+        <span class="skill-tag">Photoshop</span>
+        <span class="skill-tag">Illustrator</span>
+        <span class="skill-tag">Blender</span>
+        <span class="skill-tag">Typography</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">🖥️</span>
+      <div class="skill-title">UI / UX Design</div>
+      <p class="skill-desc">Designing interfaces that are frictionless, accessible, and delightful — bridging user needs with product goals.</p>
+      <div class="skill-tags">
+        <span class="skill-tag">Figma</span>
+        <span class="skill-tag">Prototyping</span>
+        <span class="skill-tag">User Research</span>
+        <span class="skill-tag">Design Systems</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">⚡</span>
+      <div class="skill-title">Motion & VFX</div>
+      <p class="skill-desc">Adding life to static designs through animation, particle systems, and visual effects that elevate the experience.</p>
+      <div class="skill-tags">
+        <span class="skill-tag">After Effects</span>
+        <span class="skill-tag">Particle FX</span>
+        <span class="skill-tag">CSS Animation</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">💻</span>
+      <div class="skill-title">Frontend Dev</div>
+      <p class="skill-desc">Bringing designs to life in the browser with clean, performant code — making sure the final product matches the vision.</p>
+      <div class="skill-tags">
+        <span class="skill-tag">HTML/CSS</span>
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">React</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">🛠️</span>
+      <div class="skill-title">Engineering Core</div>
+      <p class="skill-desc">BTech foundation in problem-solving, systems thinking, and structured logic that informs every creative decision.</p>
+      <div class="skill-tags">
+        <span class="skill-tag">C++</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Data Structures</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">// 03 — Projects</div>
+  <div class="section-title">Selected Work</div>
+  <div class="section-divider"></div>
+  <div class="projects-grid">
+
+    <!-- Featured -->
+    <div class="project-card featured reveal">
+      <div class="project-visual pv-gaming">
+        <div class="pv-icon">🌌</div>
+        <span class="pv-label gaming">Gaming</span>
+      </div>
+      <div class="project-info">
+        <div class="project-title">Void Protocol — Action RPG</div>
+        <p class="project-desc">A sci-fi action RPG built from scratch with immersive world-building, custom shader effects, and a deeply layered combat system. Designed every environment, character, and game mechanic.</p>
+        <div class="project-tech">
+          <span class="tech-tag">Unity</span>
+          <span class="tech-tag">C#</span>
+          <span class="tech-tag">Shader Graph</span>
+          <span class="tech-tag">Level Design</span>
+          <span class="tech-tag">VFX</span>
+        </div>
+        <a href="#" class="project-link">View Project →</a>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-visual pv-uiux">
+        <div class="pv-icon">📱</div>
+        <span class="pv-label uiux">UI/UX</span>
+      </div>
+      <div class="project-info">
+        <div class="project-title">Pulse — Music App Redesign</div>
+        <p class="project-desc">Complete UI/UX overhaul of a music streaming app. Focused on reducing cognitive load and enhancing discoverability through visual hierarchy and gesture-based navigation.</p>
+        <div class="project-tech">
+          <span class="tech-tag">Figma</span>
+          <span class="tech-tag">Prototyping</span>
+          <span class="tech-tag">User Testing</span>
+        </div>
+        <a href="#" class="project-link">View Case Study →</a>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-visual pv-graphics">
+        <div class="pv-icon">🔷</div>
+        <span class="pv-label graphics">Graphics</span>
+      </div>
+      <div class="project-info">
+        <div class="project-title">Neon Drift — Brand Identity</div>
+        <p class="project-desc">Full visual identity system for an indie game studio — logo, color language, typeface selection, and a 40-page brand guidelines document.</p>
+        <div class="project-tech">
+          <span class="tech-tag">Illustrator</span>
+          <span class="tech-tag">Photoshop</span>
+          <span class="tech-tag">Branding</span>
+        </div>
+        <a href="#" class="project-link">View Identity →</a>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-visual pv-motion">
+        <div class="pv-icon">✦</div>
+        <span class="pv-label gaming">Gaming</span>
+      </div>
+      <div class="project-info">
+        <div class="project-title">Arena Rush — Mobile Game</div>
+        <p class="project-desc">Fast-paced mobile battle arena with procedurally generated levels, responsive touch controls, and a satisfying progression loop designed for short-session play.</p>
+        <div class="project-tech">
+          <span class="tech-tag">Unity</span>
+          <span class="tech-tag">Procedural Gen</span>
+          <span class="tech-tag">Mobile UI</span>
+        </div>
+        <a href="#" class="project-link">View Project →</a>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-visual pv-brand">
+        <div class="pv-icon">🎯</div>
+        <span class="pv-label uiux">UI/UX</span>
+      </div>
+      <div class="project-info">
+        <div class="project-title">Orbit — Dashboard UI Kit</div>
+        <p class="project-desc">A complete design system with 200+ components — dark mode first, accessible, and built for data-heavy enterprise applications with a clean, modern aesthetic.</p>
+        <div class="project-tech">
+          <span class="tech-tag">Figma</span>
+          <span class="tech-tag">Design Tokens</span>
+          <span class="tech-tag">Component Lib</span>
+        </div>
+        <a href="#" class="project-link">View UI Kit →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="contact-inner reveal">
+    <div class="section-label" style="text-align:center">// 04 — Contact</div>
+    <div class="section-title" style="text-align:center">Let's Build Together</div>
+    <div class="section-divider" style="margin: 1.5rem auto 2rem"></div>
+    <p class="contact-note">
+      Open to game development collabs, UI/UX design projects, freelance graphic work, and anything that sits at the intersection of engineering and creativity.
+    </p>
+    <div style="display:flex;justify-content:center">
+      <a href="mailto:deepsarkar3968@gmail.com" class="contact-email">
+        <span>✉</span>
+        deepsarkar3968@gmail.com
+      </a>
+    </div>
+    <div class="socials">
+      <a href="mailto:deepsarkar3968@gmail.com" class="social-link" title="Email">✉</a>
+      <a href="#" class="social-link" title="GitHub">⌨</a>
+      <a href="#" class="social-link" title="LinkedIn">in</a>
+      <a href="#" class="social-link" title="Behance">Bē</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Deep Sarkar — BTech Engineer &amp; Creative</p>
+  <p>Designed &amp; Built with intent.</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '6px';
+      cursor.style.height = '6px';
+      ring.style.width = '60px';
+      ring.style.height = '60px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px';
+      cursor.style.height = '12px';
+      ring.style.width = '40px';
+      ring.style.height = '40px';
+    });
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Active nav
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 200) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
+    });
+  });
+</script>
+</body>
+</html>
